@@ -11,6 +11,7 @@ namespace ManejoPresupuesto.Servicios
         Task Crear(Transaccion transaccion);
         Task<IEnumerable<Transaccion>> ObtenerPorCuentaId(ObtenerTransaccionesPorCuenta modelo);
         Task<Transaccion> ObtenerPorId(int id, int usuarioId);
+        Task<IEnumerable<ResultadoObtenerPorSemana>> ObtenerPorSemana(ParametroObtenerTransaccionesPorUsuario modelo);
         Task<IEnumerable<Transaccion>> ObtenerPorUsuarioId(ParametroObtenerTransaccionesPorUsuario modelo);
     }
     public class RepositorioTransacciones : IRepositorioTransacciones
@@ -91,6 +92,19 @@ namespace ManejoPresupuesto.Servicios
                                                                             ON cat.Id = Transacciones.CategoriaId
                                                                             WHERE Transacciones.Id = @Id AND Transacciones.UsuarioId = @UsuarioId",
                                                                             new { id, usuarioId });
+        }
+
+        public async Task<IEnumerable<ResultadoObtenerPorSemana>> ObtenerPorSemana(ParametroObtenerTransaccionesPorUsuario modelo)
+        {
+            using var connection = new SqlConnection( connectionString);
+            return await connection.QueryAsync<ResultadoObtenerPorSemana>(@"SELECT DATEDIFF(d, @fechaInicio, FechaTransaccion) / 7 +1 AS Semana,
+                                                                            SUM(Monto) as Monto, cat.TipoOperacionId
+                                                                            FROM Transacciones
+                                                                            INNER JOIN Categorias cat
+                                                                            ON cat.Id = Transacciones.CategoriaId
+                                                                            WHERE Transacciones.UsuarioId = @usuarioId AND
+                                                                            FechaTransaccion BETWEEN @fechaInicio AND @fechaFin
+                                                                            GROUP BY DATEDIFF(d, @fechaInicio, FechaTransaccion) / 7, cat.TipoOperacionId", modelo);
         }
 
         public async Task Borrar(int id)
