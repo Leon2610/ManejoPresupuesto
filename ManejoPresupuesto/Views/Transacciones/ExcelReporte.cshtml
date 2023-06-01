@@ -8,7 +8,8 @@
     var mesActual = hoy.Month;
     var yearActual = hoy.Year;
     var mesAnterior = haceUnMes.Month;
-    var yearAnterior = haceUnMes.Year;
+    var mesAnterioryear = haceUnMes.Year;
+    var yearAnterior = yearActual - 1;
 }
 
 <partial name="_Submenu" Model="SubMenuTransacciones.Excel" />
@@ -22,25 +23,25 @@
 </div>
 
 <div class="mb-3">
-    <a asp-action="ExportarExcelPorMes" asp-route-mes="@mesAnterior" asp-route-year="@yearAnterior" class="btn btn-success">
+    <a asp-action="ExportarExcelPorMes" asp-route-mes="@mesAnterior" asp-route-year="@mesAnterioryear" class="btn btn-success">
         Exportar mes anterior
     </a> ~ @haceUnMes.ToString("MMM yyy")
 </div>
 
 <div class="mb-3">
-    <a asp-action="ExportarExcelPorMes" asp-route-mes="@mesActual" asp-route-year="@yearActual" class="btn btn-success">
+    <a asp-action="ExportarExcelPorYear"  asp-route-year="@yearActual" class="btn btn-success">
         Exportar año actual
-    </a> ~ @hoy.ToString("MMM yyy")
+    </a> ~ @yearActual
 </div>
 
 <div class="mb-3">
-    <a asp-action="ExportarExcelPorMes" asp-route-mes="@mesActual" asp-route-year="@yearActual" class="btn btn-success">
+    <a asp-action="ExportarExcelPorYear" asp-route-year="@yearAnterior" class="btn btn-success">
         Exportar año anterior
-    </a> ~ @hoy.ToString("MMM yyy")
+    </a> ~ @yearAnterior
 </div>
 
 <div class="mb-3">
-    <a asp-action="ExportarExcelPorMes" asp-route-mes="@mesActual" asp-route-year="@yearActual" class="btn btn-success">
+    <a asp-action="ExportarExcelTodo" class="btn btn-success">
         Exportar todo
     </a>
 </div>
