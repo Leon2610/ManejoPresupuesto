@@ -23,7 +23,8 @@ namespace ManejoPresupuesto.Servicios
         {
             using var connection  = new SqlConnection(connectionString);
             var id = await connection.QuerySingleAsync<int>(@"INSERT INTO Usuarios (Email, EmailNormalizado, PasswordHash)
-                                                              VALUES (@Email, @EmailNormalizado, @PasswordHash)", usuario);
+                                                              VALUES (@Email, @EmailNormalizado, @PasswordHash)
+                                                              SELECT SCOPE_IDENTITY();", usuario);
 
             return id;
         }
@@ -31,7 +32,7 @@ namespace ManejoPresupuesto.Servicios
         public async Task<Usuario> BuscarUsuarioPorEmail(string emailNormalizado)
         {
             using var connection = new SqlConnection(connectionString);
-            return await connection.QuerySingleOrDefaultAsync<Usuario>("SELECT * FROM Usuarios WHERE EmailNormalizado = @emailNormalizdo", new {emailNormalizado});
+            return await connection.QuerySingleOrDefaultAsync<Usuario>("SELECT * FROM Usuarios WHERE EmailNormalizado = @emailNormalizado", new {emailNormalizado});
         }
     }
 }
